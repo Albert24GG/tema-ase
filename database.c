@@ -19,7 +19,8 @@ struct db_manager create_database(const char *db_name, size_t entry_size)
 
 void close_database(struct db_manager db_mgr)
 {
-	fclose(db_mgr.db_file);
+	if (db_mgr.db_file != NULL)
+		(void)fclose(db_mgr.db_file);
 }
 
 static enum status write_entry(struct db_manager db_mgr, const void *entry)

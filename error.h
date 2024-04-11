@@ -14,4 +14,4 @@
 		}                                                      \
 	} while (0)
 
-enum status { STATUS_OK, STATUS_ERROR, STATUS_NOT_FOUND };
+enum status { STATUS_OK, STATUS_ERROR, STATUS_NOT_FOUND, STATUS_EXIT };
