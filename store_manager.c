@@ -4,6 +4,7 @@
 #include "error.h"
 
 #include <string.h>
+#include <strings.h>
 
 enum status add_item(struct db_manager db_mgr, const struct store_item *item)
 {
@@ -21,24 +22,10 @@ void update_price(void *entry, const void *price)
 	((struct store_item *)entry)->price = *(const float *)price;
 }
 
-// enum status update_price_by_id(struct db_manager db_mgr, int64_t barcode,
-// 							   float price)
-// {
-// 	return update_entries(db_mgr, &barcode, matches_barcode, &price,
-// 						  update_price);
-// }
-
 void update_quantity(void *entry, const void *quantity)
 {
 	((struct store_item *)entry)->quantity = *(const int *)quantity;
 }
-
-// enum status update_quantity_by_id(struct db_manager db_mgr, int64_t barcode,
-// 								  int quantity)
-// {
-// 	return update_entries(db_mgr, &barcode, matches_barcode, &quantity,
-// 						  update_quantity);
-// }
 
 void update_expiry_date(void *entry, const void *expiry_date)
 {
@@ -46,15 +33,27 @@ void update_expiry_date(void *entry, const void *expiry_date)
 			sizeof(struct date));
 }
 
-// enum status update_expiry_date_by_id(struct db_manager db_mgr, int64_t
-// barcode, 									 const char *expiry_date)
-// {
-// 	return update_entries(db_mgr, &barcode, matches_barcode, expiry_date,
-// 						  update_expiry_date);
-// }
-
 bool matches_category(const void *entry, const void *category)
 {
-	return strcmp(((const struct store_item *)entry)->category,
-				  (const char *)category) == 0;
+	return strcasecmp(((const struct store_item *)entry)->category,
+					  (const char *)category) == 0;
+}
+
+void discount_price(void *entry, const void *discount)
+{
+	((struct store_item *)entry)->price *= 1 - *(const float *)discount;
+}
+
+void dump_store_item_info(const void *entry, FILE *out)
+{
+	(void)fprintf(out, "-----------------\n");
+	const struct store_item *item = (const struct store_item *)entry;
+	(void)fprintf(out, "Cod produs: %ld\n", item->barcode);
+	(void)fprintf(out, "Nume produs: %s\n", item->name);
+	(void)fprintf(out, "Categorie: %s\n", item->category);
+	(void)fprintf(out, "Pret: %.2f\n", item->price);
+	(void)fprintf(out, "Cantitate: %zu\n", item->quantity);
+	(void)fprintf(out, "Data de expirare: %d/%d/%d\n", item->expiry_date.day,
+				  item->expiry_date.month, item->expiry_date.year);
+	(void)fprintf(out, "-----------------\n");
 }

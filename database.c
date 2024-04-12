@@ -11,7 +11,16 @@
 
 struct db_manager create_database(const char *db_name, size_t entry_size)
 {
+	printf("name: %s\n", db_name);
 	FILE *db = fopen(db_name, "w+b");
+	DIE(db == NULL, "Error opening database");
+
+	return (struct db_manager){ .db_file = db, .entry_size = entry_size };
+}
+
+struct db_manager open_database(const char *db_name, size_t entry_size)
+{
+	FILE *db = fopen(db_name, "r+b");
 	DIE(db == NULL, "Error opening database");
 
 	return (struct db_manager){ .db_file = db, .entry_size = entry_size };
@@ -30,8 +39,14 @@ static enum status write_entry(struct db_manager db_mgr, const void *entry)
 	return written == 1 ? STATUS_OK : STATUS_ERROR;
 }
 
-// return the index of the entry in the database
-// or -1 if the entry is not found
+/*
+ * @brief Find the index of the entry in the database
+ * @param db_mgr - the database manager
+ * @param criteria - the criteria to match
+ * @param matches_crit - the function to match the criteria
+ * @return the index of the entry in the database or -1 if the entry is not
+ * found
+ */
 static int64_t find_entry_idx(struct db_manager db_mgr, const void *criteria,
 							  bool (*matches_crit)(const void *, const void *))
 {
@@ -63,8 +78,6 @@ enum status append_entry(struct db_manager db_mgr, const void *entry)
 	return write_entry(db_mgr, entry);
 }
 
-// update the entries in the database, based on the should_update and update
-// functions
 enum status update_entries(struct db_manager db_mgr, const void *criteria,
 						   bool (*should_update)(const void *, const void *),
 						   const void *update_val,
@@ -147,7 +160,10 @@ enum status remove_unique_entry(struct db_manager db_mgr, const void *criteria,
 	return STATUS_OK;
 }
 
-void dump_database(struct db_manager db_mgr, void (*print_entry)(const void *))
+void dump_database(struct db_manager db_mgr,
+				   void (*dump_entry)(const void *, FILE *),
+				   const void *criteria,
+				   bool (*matches_crit)(const void *, const void *), FILE *out)
 {
 	FILE *db = db_mgr.db_file;
 	size_t entry_size = db_mgr.entry_size;
@@ -156,8 +172,11 @@ void dump_database(struct db_manager db_mgr, void (*print_entry)(const void *))
 	char *buffer = malloc(entry_size);
 	DIE(buffer == NULL, "Error allocating buffer");
 
-	while (fread(buffer, entry_size, 1, db) == 1)
-		print_entry(buffer);
+	while (fread(buffer, entry_size, 1, db) == 1) {
+		if (matches_crit == NULL || matches_crit(buffer, criteria)) {
+			dump_entry(buffer, out);
+		}
+	}
 
 	free(buffer);
 }
