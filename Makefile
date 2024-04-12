@@ -8,7 +8,7 @@ CC = gcc
 # Extension of source files used in the project
 SRC_EXT = c
 # Path to the source directory, relative to the makefile
-SRC_PATH = .
+SRC_PATH = src
 # Space-separated pkg-config libraries used by this project
 LIBS = 
 # General compiler flags
@@ -18,7 +18,7 @@ RCOMPILE_FLAGS = -DNDEBUG -O3 -march=native
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -DDEBUG -O0 -fsanitize=address -g
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)
+INCLUDES = -I $(SRC_PATH) -I include
 # General linker settings
 LINK_FLAGS = -lm
 # Additional release-specific linker settings
