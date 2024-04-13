@@ -177,10 +177,18 @@ void dump_database(struct db_manager db_mgr,
 	char *buffer = malloc(entry_size);
 	DIE(buffer == NULL, "Error allocating buffer");
 
+	int64_t cnt = 0;
 	while (fread(buffer, entry_size, 1, db) == 1) {
 		if (matches_crit == NULL || matches_crit(buffer, criteria)) {
 			dump_entry(buffer, out);
+			++cnt;
 		}
+	}
+
+	if (cnt == 0) {
+		(void)fprintf(out, "-----------------\n");
+		(void)fprintf(out, "Nicio intrare gasita\n");
+		(void)fprintf(out, "-----------------\n");
 	}
 
 	free(buffer);
