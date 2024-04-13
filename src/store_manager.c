@@ -59,7 +59,8 @@ void dump_store_item_info(const void *entry, FILE *out)
 	(void)fprintf(out, "Categorie: %s\n", item->category);
 	(void)fprintf(out, "Pret: %.2f\n", item->price);
 	(void)fprintf(out, "Cantitate: %zu\n", item->quantity);
-	(void)fprintf(out, "Data de expirare: %d/%d/%d\n", item->expiry_date.day,
-				  item->expiry_date.month, item->expiry_date.year);
+	(void)fprintf(out, "Data de expirare: %02d/%02d/%d\n",
+				  item->expiry_date.day, item->expiry_date.month,
+				  item->expiry_date.year);
 	(void)fprintf(out, "-----------------\n");
 }
