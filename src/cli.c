@@ -332,33 +332,29 @@ enum cli_ops {
 	CLI_MAX_OPS
 };
 
-static const char *cli_menu[] = {
-	[CLI_CREATE_DB] = "Creaza baza de date(fisierul binar)",
-	[CLI_LOAD_DB] = "Incarca o baza de date existenta(fisierul binar)",
-	[CLI_ADD_PRODUCT] = "Adauga un produs",
-	[CLI_UPDATE_PRODUCT] = "Actualizeaza un produs",
-	[CLI_UPDATE_CATEGORY] = "Actualizeaza o categorie de produse",
-	[CLI_DELETE_PRODUCT] = "Sterge un produs",
-	[CLI_GEN_TOTAL_REPORT] = "Genereaza un raport total(fisier text)",
-	[CLI_GEN_CATEGORY_REPORT] =
-		"Genereaza un raport pentru o categorie(fisier text)",
-	[CLI_FIND_PRODUCT] = "Gaseste un produs(afisare pe ecran)",
-	[CLI_EXIT] = "Iesire"
-};
-
 typedef enum status (*cli_op_func)(struct cli_program *);
 
-static const cli_op_func cli_ops[] = {
-	[CLI_CREATE_DB] = cli_create_db,
-	[CLI_LOAD_DB] = cli_load_db,
-	[CLI_ADD_PRODUCT] = cli_add_prod,
-	[CLI_UPDATE_PRODUCT] = cli_update_prod,
-	[CLI_UPDATE_CATEGORY] = cli_update_cat,
-	[CLI_DELETE_PRODUCT] = cli_delete_prod,
-	[CLI_GEN_TOTAL_REPORT] = cli_gen_total_report,
-	[CLI_GEN_CATEGORY_REPORT] = cli_gen_category_report,
-	[CLI_FIND_PRODUCT] = cli_find_prod,
-	[CLI_EXIT] = cli_exit
+typedef struct {
+	const char *info;
+	cli_op_func func;
+} cli_op_t;
+
+static const cli_op_t cli_ops[] = {
+	[CLI_CREATE_DB] = { "Creaza baza de date(fisierul binar)", cli_create_db },
+	[CLI_LOAD_DB] = { "Incarca o baza de date existenta(fisierul binar)",
+					  cli_load_db },
+	[CLI_ADD_PRODUCT] = { "Adauga un produs", cli_add_prod },
+	[CLI_UPDATE_PRODUCT] = { "Actualizeaza un produs", cli_update_prod },
+	[CLI_UPDATE_CATEGORY] = { "Actualizeaza o categorie de produse",
+							  cli_update_cat },
+	[CLI_DELETE_PRODUCT] = { "Sterge un produs", cli_delete_prod },
+	[CLI_GEN_TOTAL_REPORT] = { "Genereaza un raport total(fisier text)",
+							   cli_gen_total_report },
+	[CLI_GEN_CATEGORY_REPORT] = { "Genereaza un raport pentru o categorie(fisier text)",
+								  cli_gen_category_report },
+	[CLI_FIND_PRODUCT] = { "Gaseste un produs dupa nume(afisare pe ecran)",
+						   cli_find_prod },
+	[CLI_EXIT] = { "Iesire", cli_exit }
 };
 
 // static void clrscr(void)
@@ -370,7 +366,7 @@ static void cli_print_menu(void)
 {
 	// clrscr();
 	for (int i = 1; i < CLI_MAX_OPS; ++i)
-		printf("%d. %s\n", i, cli_menu[i]);
+		printf("%d. %s\n", i, cli_ops[i].info);
 }
 
 enum status cli_process_next_op(struct cli_program *cli_prog)
@@ -394,5 +390,5 @@ enum status cli_process_next_op(struct cli_program *cli_prog)
 		return STATUS_ERROR;
 	}
 
-	return cli_ops[cmd](cli_prog);
+	return cli_ops[cmd].func(cli_prog);
 }
