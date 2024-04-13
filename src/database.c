@@ -6,8 +6,13 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define _POSIX1_SOURCE 2
+#ifdef _WIN32
+#include <io.h>
+#define ftruncate _chsize_s
+#else
+#include <sys/types.h>
 #include <unistd.h>
+#endif
 
 struct db_manager create_database(const char *db_name, size_t entry_size)
 {
