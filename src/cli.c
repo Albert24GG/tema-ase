@@ -365,8 +365,10 @@ static const cli_op_t cli_ops[] = {
 static void cli_print_menu(void)
 {
 	// clrscr();
+	printf("-----------------\n");
 	for (int i = 1; i < CLI_MAX_OPS; ++i)
 		printf("%d. %s\n", i, cli_ops[i].info);
+	printf("-----------------\n");
 }
 
 enum status cli_process_next_op(struct cli_program *cli_prog)
