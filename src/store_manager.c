@@ -17,6 +17,18 @@ bool matches_barcode(const void *entry, const void *barcode)
 		   *(const int64_t *)barcode;
 }
 
+bool matches_category(const void *entry, const void *category)
+{
+	return strcasecmp(((const struct store_item *)entry)->category,
+					  (const char *)category) == 0;
+}
+
+bool matches_name(const void *entry, const void *name)
+{
+	return strcasecmp(((const struct store_item *)entry)->name,
+					  (const char *)name) == 0;
+}
+
 void update_price(void *entry, const void *price)
 {
 	((struct store_item *)entry)->price = *(const float *)price;
@@ -31,12 +43,6 @@ void update_expiry_date(void *entry, const void *expiry_date)
 {
 	memmove(&((struct store_item *)entry)->expiry_date, expiry_date,
 			sizeof(struct date));
-}
-
-bool matches_category(const void *entry, const void *category)
-{
-	return strcasecmp(((const struct store_item *)entry)->category,
-					  (const char *)category) == 0;
 }
 
 void discount_price(void *entry, const void *discount)

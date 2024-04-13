@@ -32,6 +32,22 @@ struct store_item {
 bool matches_barcode(const void *entry, const void *barcode);
 
 /*
+ * @brief check if the category of the entry matches the reference category
+ * @param entry the entry to check
+ * @param category the category to check against
+ * @return true if the categories match, false otherwise
+ */
+bool matches_category(const void *entry, const void *category);
+
+/*
+ * @brief check if the name of the entry matches the reference name
+ * @param entry the entry to check
+ * @param name the name to check against
+ * @return true if the names match, false otherwise
+ */
+bool matches_name(const void *entry, const void *name);
+
+/*
  * @brief check if the price of the entry matches the reference price
  * @param entry the entry to check
  * @param price the price to check against
@@ -55,14 +71,6 @@ void update_quantity(void *entry, const void *quantity);
  * @return true if the expiry dates match, false otherwise
  */
 void update_expiry_date(void *entry, const void *expiry_date);
-
-/*
- * @brief check if the category of the entry matches the reference category
- * @param entry the entry to check
- * @param category the category to check against
- * @return true if the categories match, false otherwise
- */
-bool matches_category(const void *entry, const void *category);
 
 /*
  * @brief apply a discount to the price of the entry using the discount value

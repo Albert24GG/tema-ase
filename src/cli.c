@@ -303,23 +303,22 @@ static enum status cli_gen_category_report(struct cli_program *cli_prog)
 
 static enum status cli_find_prod(struct cli_program *cli_prog)
 {
-	printf("Introduceti codul produsului: ");
+	printf("Introduceti numele produsului: ");
 	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
 		return STATUS_ERROR;
-
-	uintmax_t barcode = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
-
-	dump_database(cli_prog->db_mgr, dump_store_item_info, &barcode,
-				  matches_barcode, stdout);
+	char *name = strip(cli_prog->cmd_buffer);
+	dump_database(cli_prog->db_mgr, dump_store_item_info, (void *)name,
+				  matches_name, stdout);
 	return STATUS_OK;
 }
 
 static enum status cli_exit(struct cli_program *cli_prog)
 {
+	(void)cli_prog;
 	return STATUS_EXIT;
 }
 
-static enum cli_ops {
+enum cli_ops {
 	CLI_CREATE_DB = 1,
 	CLI_LOAD_DB,
 	CLI_ADD_PRODUCT,
@@ -362,10 +361,10 @@ static const cli_op_func cli_ops[] = {
 	[CLI_EXIT] = cli_exit
 };
 
-static void clrscr(void)
-{
-	printf("\033[2J\033[1;1H");
-}
+// static void clrscr(void)
+// {
+// 	printf("\033[2J\033[1;1H");
+// }
 
 static void cli_print_menu(void)
 {
