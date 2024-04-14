@@ -233,7 +233,7 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 							  &expiry_date, update_expiry_date);
 	}
 	default:
-		fprintf(stderr, "Comanda invalida\n");
+		printf("Comanda invalida\n");
 		return STATUS_ERROR;
 	}
 
@@ -267,7 +267,11 @@ static enum status cli_delete_prod(struct cli_program *cli_prog)
 
 	uintmax_t barcode = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
-	return remove_unique_entry(cli_prog->db_mgr, &barcode, matches_barcode);
+	enum status status =
+		remove_unique_entry(cli_prog->db_mgr, &barcode, matches_barcode);
+	if (status == STATUS_ERROR)
+		printf("Produsul nu a fost gasit\n");
+	return status;
 }
 
 static enum status cli_gen_total_report(struct cli_program *cli_prog)
