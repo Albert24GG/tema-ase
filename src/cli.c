@@ -24,6 +24,8 @@
 		_val;                                     \
 	})
 
+// macro for parsing a string to a float value in a given base
+// should be only used fo parsing command arguments
 #define CMD_PARSE_FLOAT(arg)                      \
 	({                                            \
 		const char *_arg = arg;                   \

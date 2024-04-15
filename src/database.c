@@ -16,7 +16,6 @@
 
 struct db_manager create_database(const char *db_name, size_t entry_size)
 {
-	printf("name: %s\n", db_name);
 	FILE *db = fopen(db_name, "w+b");
 	DIE(db == NULL, "Error opening database");
 
@@ -53,11 +52,10 @@ static enum status write_entry(struct db_manager db_mgr, const void *entry)
  * found
  */
 static int64_t find_entry_idx(struct db_manager db_mgr, const void *criteria,
-							  bool (*matches_crit)(const void *, const void *))
+							  match_crit_func matches_crit)
 {
 	FILE *db = db_mgr.db_file;
 	size_t entry_size = db_mgr.entry_size;
-	// (void)fseek(db, 0, SEEK_SET);
 
 	int64_t idx = 0;
 
@@ -84,9 +82,8 @@ enum status append_entry(struct db_manager db_mgr, const void *entry)
 }
 
 enum status update_entries(struct db_manager db_mgr, const void *criteria,
-						   bool (*should_update)(const void *, const void *),
-						   const void *update_val,
-						   void (*update)(void *, const void *))
+						   match_crit_func should_update,
+						   const void *update_val, update_func update)
 {
 	FILE *db = db_mgr.db_file;
 	size_t entry_size = db_mgr.entry_size;
@@ -109,8 +106,7 @@ enum status update_entries(struct db_manager db_mgr, const void *criteria,
 }
 
 enum status remove_unique_entry(struct db_manager db_mgr, const void *criteria,
-								bool (*matches_crit)(const void *,
-													 const void *))
+								match_crit_func matches_crit)
 {
 	FILE *db = db_mgr.db_file;
 	size_t entry_size = db_mgr.entry_size;
@@ -165,10 +161,9 @@ enum status remove_unique_entry(struct db_manager db_mgr, const void *criteria,
 	return STATUS_OK;
 }
 
-void dump_database(struct db_manager db_mgr,
-				   void (*dump_entry)(const void *, FILE *),
-				   const void *criteria,
-				   bool (*matches_crit)(const void *, const void *), FILE *out)
+void dump_database(struct db_manager db_mgr, dump_entry_func dump_entry,
+				   const void *criteria, match_crit_func matches_crit,
+				   FILE *out)
 {
 	FILE *db = db_mgr.db_file;
 	size_t entry_size = db_mgr.entry_size;
@@ -186,9 +181,7 @@ void dump_database(struct db_manager db_mgr,
 	}
 
 	if (cnt == 0) {
-		(void)fprintf(out, "-----------------\n");
 		(void)fprintf(out, "Nicio intrare gasita\n");
-		(void)fprintf(out, "-----------------\n");
 	}
 
 	free(buffer);
