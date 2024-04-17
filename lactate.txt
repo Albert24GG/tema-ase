@@ -1,0 +1,24 @@
+-----------------
+Cod produs: 1
+Nume produs: Lapte
+Categorie: Lactate
+Pret: 10.64
+Cantitate: 100
+Data de expirare: 30/06/2024
+-----------------
+-----------------
+Cod produs: 40
+Nume produs: Iaurt
+Categorie: Lactate
+Pret: 3.04
+Cantitate: 120
+Data de expirare: 15/05/2024
+-----------------
+-----------------
+Cod produs: 25
+Nume produs: Branza
+Categorie: Lactate
+Pret: 14.51
+Cantitate: 89
+Data de expirare: 10/05/2024
+-----------------

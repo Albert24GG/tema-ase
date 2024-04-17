@@ -1,0 +1,40 @@
+-----------------
+Cod produs: 1
+Nume produs: Lapte
+Categorie: Lactate
+Pret: 10.64
+Cantitate: 100
+Data de expirare: 30/06/2024
+-----------------
+-----------------
+Cod produs: 2
+Nume produs: Mici
+Categorie: Mezeluri
+Pret: 19.50
+Cantitate: 200
+Data de expirare: 22/04/2024
+-----------------
+-----------------
+Cod produs: 40
+Nume produs: Iaurt
+Categorie: Lactate
+Pret: 3.04
+Cantitate: 120
+Data de expirare: 15/05/2024
+-----------------
+-----------------
+Cod produs: 25
+Nume produs: Branza
+Categorie: Lactate
+Pret: 14.51
+Cantitate: 89
+Data de expirare: 10/05/2024
+-----------------
+-----------------
+Cod produs: 35
+Nume produs: Ciocolata
+Categorie: Dulciuri
+Pret: 7.89
+Cantitate: 95
+Data de expirare: 11/08/2024
+-----------------

@@ -1,0 +1,58 @@
+1
+test.txt
+3
+1
+Lapte
+Lactate
+11.20
+100
+30 06 2024
+3
+2
+Mici
+Mezeluri
+19.5
+200
+22 04 2024
+3
+40
+Iaurt
+Lactate
+3.20
+120
+15 05 2024
+3
+25
+Branza
+Lactate
+15.27
+100
+10 05 2024
+3
+35
+Ciocolata
+Dulciuri
+7.89
+95
+10 08 2024
+5
+Lactate
+5
+9
+Iaurt
+4
+25
+2
+89
+4
+35
+3
+11 08 2024
+8
+lactate.txt
+Lactate
+7
+raport.txt
+10
+
+
