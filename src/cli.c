@@ -265,6 +265,8 @@ static enum status cli_update_cat(struct cli_program *cli_prog)
 		return STATUS_ERROR;
 	}
 
+	discount /= 100;
+
 	return update_entries(cli_prog->db_mgr, category, matches_category,
 						  &discount, discount_price);
 }
