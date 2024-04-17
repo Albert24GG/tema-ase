@@ -242,10 +242,14 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 	return STATUS_OK;
 }
 
+static inline bool is_valid_percentage(float discount)
+{
+	return discount >= 0 && discount <= 100;
+}
+
 static enum status cli_update_cat(struct cli_program *cli_prog)
 {
-	printf("Aplicati un discount pentru o categorie de produse\n"
-		   "Introduceti categoria: ");
+	printf("Introduceti categoria: ");
 	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
 		return STATUS_ERROR;
 	char category[ITEM_CATEGORY_MAX_LEN];
@@ -255,7 +259,11 @@ static enum status cli_update_cat(struct cli_program *cli_prog)
 	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
 		return STATUS_ERROR;
 	float discount = CMD_PARSE_FLOAT(cli_prog->cmd_buffer);
-	discount /= 100;
+
+	if (!is_valid_percentage(discount)) {
+		printf("Discount invalid\n");
+		return STATUS_ERROR;
+	}
 
 	return update_entries(cli_prog->db_mgr, category, matches_category,
 						  &discount, discount_price);
@@ -351,7 +359,7 @@ static const cli_op_t cli_ops[] = {
 					  cli_load_db },
 	[CLI_ADD_PRODUCT] = { "Adauga un produs", cli_add_prod },
 	[CLI_UPDATE_PRODUCT] = { "Actualizeaza un produs unic", cli_update_prod },
-	[CLI_UPDATE_CATEGORY] = { "Actualizeaza o categorie de produse",
+	[CLI_UPDATE_CATEGORY] = { "Aplicati discount unei categorii de produse",
 							  cli_update_cat },
 	[CLI_DELETE_PRODUCT] = { "Sterge un produs unic", cli_delete_prod },
 	[CLI_GEN_TOTAL_REPORT] = { "Genereaza un raport total(fisier text)",
