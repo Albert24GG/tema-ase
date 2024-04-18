@@ -38,6 +38,12 @@
 		_val;                                     \
 	})
 
+#define GET_LINE(buffer)                                   \
+	({                                                     \
+		if (fgets(buffer, CLI_MAX_CMD_LEN, stdin) == NULL) \
+			return STATUS_ERROR;                           \
+	})
+
 struct cli_program *create_cli_program(void)
 {
 	struct cli_program *cli_prog = calloc(1, sizeof(struct cli_program));
@@ -126,33 +132,27 @@ static enum status cli_add_prod(struct cli_program *cli_prog)
 {
 	struct store_item item = { 0 };
 	printf("Cod produs: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	item.barcode = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
 	printf("Nume produs: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	strncpy(item.name, strip(cli_prog->cmd_buffer), ITEM_NAME_MAX_LEN);
 
 	printf("Categorie: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	strncpy(item.category, strip(cli_prog->cmd_buffer), ITEM_CATEGORY_MAX_LEN);
 
 	printf("Pret: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	item.price = CMD_PARSE_FLOAT(cli_prog->cmd_buffer);
 
 	printf("Cantitate: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	item.quantity = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
 	printf("Data de expirare(zi luna an): ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 
 	char *tok = strtok(cli_prog->cmd_buffer, " ");
 	item.expiry_date.day = CMD_PARSE_UINTMAX(tok, 10);
@@ -174,8 +174,7 @@ static enum status cli_add_prod(struct cli_program *cli_prog)
 static enum status cli_update_prod(struct cli_program *cli_prog)
 {
 	printf("Introduceti codul produsului: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 
 	uintmax_t barcode = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
@@ -185,16 +184,14 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 		   "3. Data de expirare\n"
 		   "Introduceti comanda: ");
 
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 
 	uintmax_t cmd = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
 	switch (cmd) {
 	case 1: {
 		printf("Introduceti noul pret: ");
-		if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-			return STATUS_ERROR;
+		GET_LINE(cli_prog->cmd_buffer);
 
 		float price = CMD_PARSE_FLOAT(cli_prog->cmd_buffer);
 
@@ -203,8 +200,7 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 	}
 	case 2: {
 		printf("Introduceti noua cantitate: ");
-		if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-			return STATUS_ERROR;
+		GET_LINE(cli_prog->cmd_buffer);
 
 		uintmax_t quantity = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
@@ -213,8 +209,7 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 	}
 	case 3: {
 		printf("Introduceti noua data de expirare(zi luna an): ");
-		if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-			return STATUS_ERROR;
+		GET_LINE(cli_prog->cmd_buffer);
 
 		char *tok = strtok(cli_prog->cmd_buffer, " ");
 		struct date expiry_date = { 0 };
@@ -250,14 +245,13 @@ static inline bool is_valid_percentage(float discount)
 static enum status cli_update_cat(struct cli_program *cli_prog)
 {
 	printf("Introduceti categoria: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
+
 	char category[ITEM_CATEGORY_MAX_LEN];
 	strncpy(category, strip(cli_prog->cmd_buffer), ITEM_CATEGORY_MAX_LEN);
 
 	printf("Introduceti discount-ul(%%): ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	float discount = CMD_PARSE_FLOAT(cli_prog->cmd_buffer);
 
 	if (!is_valid_percentage(discount)) {
@@ -274,8 +268,7 @@ static enum status cli_update_cat(struct cli_program *cli_prog)
 static enum status cli_delete_prod(struct cli_program *cli_prog)
 {
 	printf("Introduceti codul produsului: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 
 	uintmax_t barcode = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
@@ -309,8 +302,7 @@ static enum status cli_gen_category_report(struct cli_program *cli_prog)
 	}
 
 	printf("Introduceti categoria: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	char *category = strip(cli_prog->cmd_buffer);
 	dump_database(cli_prog->db_mgr, dump_store_item_info, (void *)category,
 				  matches_category, out);
@@ -320,8 +312,7 @@ static enum status cli_gen_category_report(struct cli_program *cli_prog)
 static enum status cli_find_prod(struct cli_program *cli_prog)
 {
 	printf("Introduceti numele produsului: ");
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 	char *name = strip(cli_prog->cmd_buffer);
 	dump_database(cli_prog->db_mgr, dump_store_item_info, (void *)name,
 				  matches_name, stdout);
@@ -392,8 +383,7 @@ enum status cli_process_next_op(struct cli_program *cli_prog)
 	cli_print_menu();
 	printf("Introduceti comanda: ");
 	uintmax_t cmd;
-	if (fgets(cli_prog->cmd_buffer, CLI_MAX_CMD_LEN, stdin) == NULL)
-		return STATUS_ERROR;
+	GET_LINE(cli_prog->cmd_buffer);
 
 	cmd = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
