@@ -2,7 +2,7 @@
 # The name of the executable to be created
 BIN_NAME := store_manager
 # The name of the zip archive to be created
-ZIP_NAME := 315CA_GuimanAlbert_Tema1
+ZIP_NAME := proiect-ase
 # Compiler used
 CC = gcc
 # Extension of source files used in the project
