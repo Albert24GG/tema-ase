@@ -387,7 +387,7 @@ enum status cli_process_next_op(struct cli_program *cli_prog)
 
 	cmd = CMD_PARSE_UINTMAX(cli_prog->cmd_buffer, 10);
 
-	if (cmd != CLI_CREATE_DB && cmd != CLI_LOAD_DB &&
+	if (cmd != CLI_EXIT && cmd != CLI_CREATE_DB && cmd != CLI_LOAD_DB &&
 		cli_prog->db_mgr.db_file == NULL) {
 		fprintf(stderr, "Nu exista o baza de date deschisa\n");
 		return STATUS_ERROR;
