@@ -171,6 +171,11 @@ static enum status cli_add_prod(struct cli_program *cli_prog)
 	return append_entry(cli_prog->db_mgr, &item);
 }
 
+static inline bool is_valid_percentage(float discount)
+{
+	return discount >= 0 && discount <= 100;
+}
+
 static enum status cli_update_prod(struct cli_program *cli_prog)
 {
 	printf("Introduceti codul produsului: ");
@@ -182,6 +187,7 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 		   "1. Pret\n"
 		   "2. Cantitate\n"
 		   "3. Data de expirare\n"
+		   "4. Aplicati discount\n"
 		   "Introduceti comanda: ");
 
 	GET_LINE(cli_prog->cmd_buffer);
@@ -229,17 +235,28 @@ static enum status cli_update_prod(struct cli_program *cli_prog)
 		return update_entries(cli_prog->db_mgr, &barcode, matches_barcode,
 							  &expiry_date, update_expiry_date);
 	}
+
+	case 4: {
+		printf("Introduceti discount-ul(%%): ");
+		GET_LINE(cli_prog->cmd_buffer);
+		float discount = CMD_PARSE_FLOAT(cli_prog->cmd_buffer);
+
+		if (!is_valid_percentage(discount)) {
+			printf("Discount invalid\n");
+			return STATUS_ERROR;
+		}
+
+		discount /= 100;
+
+		return update_entries(cli_prog->db_mgr, &barcode, matches_barcode,
+							  &discount, discount_price);
+	}
 	default:
 		printf("Comanda invalida\n");
 		return STATUS_ERROR;
 	}
 
 	return STATUS_OK;
-}
-
-static inline bool is_valid_percentage(float discount)
-{
-	return discount >= 0 && discount <= 100;
 }
 
 static enum status cli_update_cat(struct cli_program *cli_prog)
