@@ -10,7 +10,7 @@ Data de expirare: 30/06/2024
 Cod produs: 2
 Nume produs: Mici
 Categorie: Mezeluri
-Pret: 19.50
+Pret: 17.16
 Cantitate: 200
 Data de expirare: 22/04/2024
 -----------------

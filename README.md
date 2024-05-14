@@ -56,6 +56,7 @@ cele din urma fiind insotite de documentatie privind scopul functiei, parametrii
   \_ 4.1. Actualizeaza pret
   \_ 4.2. Actualizeaza cantitate
   \_ 4.3. Actualizeaza data de expirare
+  \_ 4.4. Aplica discount
 5. Aplica discount unei categorii de produse
 6. Sterge un produs unic
 7. Genereaza un raport total(fisier text)
@@ -135,7 +136,7 @@ Data de expirare: 30/06/2024
 Cod produs: 2
 Nume produs: Mici
 Categorie: Mezeluri
-Pret: 19.50
+Pret: 17.16
 Cantitate: 200
 Data de expirare: 22/04/2024
 -----------------
